@@ -1,0 +1,51 @@
+
+<section class="container mt-4">
+    <h4>Teste número manualmente </h4>
+    <div class="card-body card">
+        <div>
+            <h5>Verificar número <strong id="validando"></strong></h5>
+            <div class="row">
+                <div class="col-3">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Código Pais </span>
+                        <input value="55"  maxlength="2" id="pais" type="text" class="form-control" aria-label="pais">
+                    </div>
+                </div>
+                <div class="col-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">DDD </span>
+                    <input  maxlength="2" value="11" id="ddd" type="text" class="form-control" aria-label="ddd">
+                </div>
+                </div>
+
+                <div class="col-4">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Número  </span>
+                    <input  maxlength="9" id="numero" type="text" class="form-control" aria-label="telefone">
+                </div>
+                </div>
+                <div class="col-2">
+                    <button class="btn btn-primary" onclick="onWhatsApp()" >Verificar</button>
+                </div>
+            </div>
+
+            
+            
+           
+        </div>
+        <div>
+            <h4>resposta</h4>
+            <div id="RespostaPesquisa" >
+
+            </div>
+            <img src="" id="fotoperfil" alt="">
+            <div id="dados" class="card-body card"></div>
+        </div>
+        
+        <div hidden> 
+            <h4>Empresa</h4>
+            
+            <div id="dadosempresa" style="border: 2px solid black;padding:5px"></div>
+        </div>
+    </div>
+</section>

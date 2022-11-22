@@ -1,0 +1,52 @@
+
+.body{
+    overflow: hidden;
+}
+
+.loading{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    background-color: #3335;
+    z-index: 1000000000;
+}
+.hidden{
+    display: none;
+}
+
+.bg-whatsapp{
+    background-image: url('https://i.pinimg.com/originals/39/43/6b/39436bfde85aff78b465a6057379620c.jpg');
+    background-size: cover;
+    background-position: center;
+}
+section{
+    width: 95vw;
+    height: 95vh;
+ 
+}
+.navbar-brand {
+    padding-top: var(--bs-navbar-brand-padding-y);
+    padding-bottom: var(--bs-navbar-brand-padding-y);
+    margin-right: var(--bs-navbar-brand-margin-end);
+    font-size: var(--bs-navbar-brand-font-size);
+    color: rgb(255 255 255 / 90%);
+    text-decoration: none;
+    white-space: nowrap;
+}
+.navbar-toggler {
+    padding: var(--bs-navbar-toggler-padding-y) var(--bs-navbar-toggler-padding-x);
+    font-size: var(--bs-navbar-toggler-font-size);
+    line-height: 1;
+    color: var(--bs-navbar-color);
+    background-color: white;
+    border: var(--bs-border-width) solid var(--bs-navbar-toggler-border-color);
+    border-radius: var(--bs-navbar-toggler-border-radius);
+    transition: var(--bs-navbar-toggler-transition);
+}
+.opacity{
+    opacity: 0.8;
+}

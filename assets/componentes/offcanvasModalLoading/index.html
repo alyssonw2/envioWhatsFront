@@ -1,0 +1,111 @@
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Conectando o whatsapp</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+
+            </div>
+        </div>
+
+        <!-- Modal busca whatsapp valido -->
+        <div class="modal fade" id="modalGetWhats" tabindex="-1" aria-labelledby="modalGetWhatsLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalGetWhatsLabel">
+
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h4>Lista para envio números gerados</h4>
+                        <div></div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="card card-body">
+                                    <h2>Gerados</h2>
+                                    <h4 id="gerados">0</h4>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card card-body">
+                                    <h2>Confirmados</h2>
+                                    <h4 id="confirmados">0</h4>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card card-body">
+                                    <h2>Não whatsapp</h2>
+                                    <h4 id="falha">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="listasnumeroGerado" class="row mt-4">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                <button type="button" onclick="donwloadNumeros()" class="btn btn-secondary">Donwload gerados</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary">Salvar números</button>
+                <button type="button" class="btn btn-primary">Criar Campanha</button>
+                
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+
+    
+
+    <!-- Button trigger modal -->
+<button hidden type="button" id="openmodal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade "  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"  data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Notficando</h1>
+          <button hidden id="closemodal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <h3>Socket desconectado</h3>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+   
+
+  <div class="loading" hidden id="loading" >
+
+    <div class="card card-body" style="max-width: 350px; background-color:#290661; color: white;">
+        <div class="row">
+            <div class="col-4">
+                <div class="spinner-border " role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="col-8">
+                <div>Buscando Whatsapp</div>
+                <div>
+               <button onclick="CancelarBuscar()" type="button" class="btn btn-light"
+        style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+  Cancelar
+</button>
+                </div>
+            </div>
+        </div>
+          
+    </div>
+  </div>

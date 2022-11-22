@@ -1,0 +1,29 @@
+<section class="container">
+    <div class="card card-body mt-4">
+        <div class="row">
+            <h2>Gerar whatsapps válidos</h2>
+            <h4>Entre com a quantidade de whatsapps válidos </h4>
+            <div class="col-3">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">Código Pais </span>
+                    <input  maxlength="2" value="55" id="pais" type="text" class="form-control" aria-label="pais">
+                </div>
+            </div>
+            <div class="col-3">
+            <div class="input-group mb-3">
+                <span class="input-group-text">DDD </span>
+                <input  maxlength="2" value="11" id="ddd" type="text" class="form-control" aria-label="ddd">
+            </div>
+            </div>
+            <div class="col-3">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Quantidade </span>
+                <input max="999" value="1" id="quantidade" type="number" class="form-control" min="1" aria-label="quantidade">
+            </div>
+            </div>
+            <div class="col-3">
+            <button  data-bs-toggle="modal" data-bs-target="#modalGetWhats" class="btn  btn-primary" onclick="Gerarwhatsapp()">Gerar whatsapps</button>
+            </div>
+        </div>
+    </div>
+</section>
