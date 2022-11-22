@@ -1,12 +1,12 @@
-const sock = io("http://192.168.2.103:7777", {
+let gerados = []
+
+    const sock = io("http://192.168.2.103:7777", {
     reconnectionDelayMax: 10000
     });
-    
-   const timer = (seconds) =>  {
+    const timer = (seconds) =>  {
     let time = seconds * 500
     return new Promise(res => setTimeout(res, time))
-}
-
+    }
     sock.on("connect",async dados=>{
     console.log(sock.id)
     
@@ -32,7 +32,6 @@ const sock = io("http://192.168.2.103:7777", {
         }
        return (await toBase64(file));
     }
-    
     async function donwloadNumeros() {
         let csvContent = "data:text/csv;charset=utf-8,";
 
@@ -45,8 +44,6 @@ const sock = io("http://192.168.2.103:7777", {
         var encodedUri = encodeURI(csvContent);
         window.open(encodedUri);
     }
-    let gerados = []
-
     async function start() {
     let d = {
     sessionName:'willian.json', //identificado da sessão
@@ -58,7 +55,6 @@ const sock = io("http://192.168.2.103:7777", {
         document.querySelector("#loading").hidden = false
     }) 
     }
-
     async function validarNumero(numero){
         let WhatsappID = numero
         document.querySelector("#loading").hidden = false
@@ -75,7 +71,6 @@ const sock = io("http://192.168.2.103:7777", {
         
         
     }
-
     async function onWhatsApp(){
       let WhatsappID = document.querySelector("#numero").value
       let pais = document.querySelector("#pais").value
@@ -121,7 +116,6 @@ const sock = io("http://192.168.2.103:7777", {
 
         })
     }
-
     sock.on("Qrcode", async dados=>{
     console.log(dados)
     document.querySelector(".offcanvas-body").innerHTML = `
@@ -214,7 +208,6 @@ const sock = io("http://192.168.2.103:7777", {
         console.log(tel)
         return tel
     }
-
     async function previsulização() {
         let base64img = await GetBase64IMG()
         document.querySelector('#imgconvertida').innerHTML = base64img
@@ -222,11 +215,9 @@ const sock = io("http://192.168.2.103:7777", {
         document.querySelector("#imgconvertida").src =base64img 
         document.querySelector("#TextopreVisulizado").innerHTML = mensagem     
     }
-    
     let NumerosGerados = 0
     let confirmados = 0
     let falhawhatsapp = 0
-
     async function Gerarwhatsapp() {
       let quantidade  = document.querySelector("#quantidade").value  
       let tentativas = 0
@@ -245,7 +236,6 @@ const sock = io("http://192.168.2.103:7777", {
       document.querySelector("#loading").hidden = true
       
     }
-
     async function aplicandoNumero(numero) {
         let WhatsappID = numero
         let d = {
@@ -317,7 +307,6 @@ const sock = io("http://192.168.2.103:7777", {
         console.log(mensagem)
 
     }
-
     async function Desabilitar(item){
         if(
             document.getElementById(item).classList.contains('opacity') == true
@@ -333,11 +322,9 @@ const sock = io("http://192.168.2.103:7777", {
             document.querySelector("#confirmados").innerHTML = gerados.length-1
         }
     }
-
     async function CancelarBuscar(){
         window.location.href=window.location.href
     }
-    
     async function enviarComFoto() {
         if(document.querySelector('#enviarConFoto').hidden==false){
             document.querySelector('#enviarConFoto').hidden=true
