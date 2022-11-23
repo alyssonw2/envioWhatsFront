@@ -18,8 +18,14 @@
                   <input onchange="previsulização()" class="form-control" type="file" id="FileImagem" placeholder="arquivo">
                 </div>
  
-              
+                <hr>
+                <div class="mb-3">
+                  <label for="delay" class="form-label">Delay  </label>
+                  <input type="number" value="20" max="240" min="5" class="form-control" id="delay" aria-describedby="help">
+                  <div id="help" class="form-text">Intervalo de segundos envio entre mensagens, onde minimo e 5 segundos e maximo 240 segundos.</div>
+                </div>
  
+                <hr>
                 <div class="mt-4">
                   <h4>Escreva o texto a ser enviado!</h4>
                   <textarea onchange="previsulização()" onkeyup="previsulização()" class="form-control mt-4" name="texto" id="texto" cols="30" rows="10"></textarea>
@@ -27,21 +33,18 @@
               
               <div class="row mt-4">
                   <div class="col-4" style="display: flex;justify-content: center; align-items: center;">
-                      <button  class="col-11 btn btn-secondary" onclick="enviar()" id="enviar"> Enviar teste</button>
-          
+                      <button  class="col-11 btn btn-secondary" onclick="EnvioDeTezte()" id="enviar"> Enviar de teste</button>
                   </div>
                   <div class="col-4" style="display: flex;justify-content: center; align-items: center;">
-                    <button  class="col-11 btn btn-primary" onclick="nav.whatsappvalidos()" id="gerar"> Gerar whatsapps </button>
+                    <button  class="col-11 btn btn-primary" onclick="nav.whatsappvalidos()" id="gerar"> Encontrar WhatsApp </button>
                   </div>
-                  
-                
               </div>
           </div>
       </div>
       <div class="col-md-6 col-sm-12 bg-whatsapp " style="display: flex; justify-content: center;align-items: center;flex-direction: column;">
           <h4 class="mb-4">Pré visualização da mensagem</h4>
           <div class="card" style="max-width:350px;" >
-              <img id="imgconvertida" hidden  src="https://th.bing.com/th/id/OIP.uE-t0OHQf3dIo6jA6X7MnwHaEo?pid=ImgDet&rs=1" class="card-img-top" alt="foto" style="max-width:350px;" >
+              <img id="imgconvertida" hidden  src="https://th.bing.com/th/id/OIP.uE-t0OHQf3dIo6jA6X7MnwHaEo?pid=ImgDet&rs=1" class="card-img-top" alt="foto" style="max-height:350px;" >
               <div class="card-body">
                 <p class="card-text" id="TextopreVisulizado"></p>
               </div>

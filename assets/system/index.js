@@ -45,16 +45,16 @@ let gerados = []
         window.open(encodedUri);
     }
     async function start() {
-    let d = {
-    sessionName:'willian.json', //identificado da sessão
-    browserName:'DEVTESTE', // nome que será exibido no dispositivo
-    soketID:sock.id,
-    webhook:'' // caminho para notificações
-    }
-    sock.emit("startConexao",d,()=>{
-        document.querySelector("#loading").hidden = false
-    }) 
-    }
+        let d = {
+        sessionName:'willian.json', //identificado da sessão
+        browserName:'DEVTESTE', // nome que será exibido no dispositivo
+        soketID:sock.id,
+        webhook:'' // caminho para notificações
+        }
+        sock.emit("startConexao",d,(ret)=>{
+            document.querySelector("#loading").hidden = false
+        }) 
+    }  
     async function validarNumero(numero){
         let WhatsappID = numero
         document.querySelector("#loading").hidden = false
@@ -82,6 +82,7 @@ let gerados = []
             WhatsappID:numero
         }
         sock.emit("onWhatsApp",d,(ret)=>{
+            document.querySelector("#RespostaPesquisa").innerHTML = ``
             console.log(ret)
             document.querySelector('#dados').innerHTML = ret[0].jid
             let d = {
@@ -141,6 +142,7 @@ let gerados = []
         console.log(dados)
         let n =  dados.numero.split(':')
         WhatsappID =  n[0]+'@c.us'
+        localStorage.WhatsappID = n[0]+'@c.us'
         let d = {
             sessionName:'willian.json', //identificado da sessão
             soketID:sock.id,
@@ -329,10 +331,65 @@ let gerados = []
         if(document.querySelector('#enviarConFoto').hidden==false){
             document.querySelector('#enviarConFoto').hidden=true
             document.querySelector("#imgconvertida").hidden=true
+            document.getElementById('FileImagem').value=''
         }
         else{
             document.querySelector('#enviarConFoto').hidden=false
             document.querySelector("#imgconvertida").hidden=false
         }
 
+    }
+    async function  EnvioDeTezte() {
+        document.querySelector("#loading").hidden = false
+        alert('Será enviado para o número: '+localStorage.WhatsappID)
+        const file = document.getElementById('FileImagem').files[0];
+        let base64img = ''
+        if(file?.name != undefined){
+            base64img = await GetBase64IMG()
+        }
+        let mensagem = document.querySelector("textarea").value
+        console.table([base64img,mensagem])
+        let WhatsappID = localStorage.WhatsappID
+        let imgName = file?.name
+        let dados = {
+            sessionName:'willian.json', //identificado da sessão
+            soketID:sock.id,
+            imgName,
+            "id":WhatsappID,
+            base64:base64img,
+            message: {
+                image: {url:'./upload/'+imgName}
+            }
+        }
+        if(base64img != ''){
+        sock.emit("sendMessage",dados, (ret)=>{
+            if(mensagem != ''){
+                let dados = {
+                    sessionName:'willian.json', //identificado da sessão
+                    soketID:sock.id,
+                    "id":WhatsappID,
+                    message : {text: mensagem }
+                }  
+                sock.emit("sendMessage",dados, (ret)=>{
+                    console.log(ret)
+                    document.querySelector("#loading").hidden = true        
+                })
+            }
+        })
+        }else{
+            if(mensagem != ''){
+                let dados = {
+                    sessionName:'willian.json', //identificado da sessão
+                    soketID:sock.id,
+                    "id":WhatsappID,
+                    message : {text: mensagem }
+                }  
+                sock.emit("sendMessage",dados, (ret)=>{
+                    console.log(ret)
+                    document.querySelector("#loading").hidden = true        
+                })
+            }
+        }
+       
+        
     }
