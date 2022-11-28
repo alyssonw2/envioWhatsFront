@@ -367,7 +367,6 @@ let gerados = []
         let base64img = ''
         if(file?.name != undefined){
             base64img = await GetBase64IMG()
-
         }
 
         localStorage.mensagemImage_base64img =  base64img
@@ -421,9 +420,13 @@ let gerados = []
         
     }
     async function salvarCampanha() {
-        localStorage.mensagemImage_base64img =  base64img
-        localStorage.mensagemText = mensagem
-        localStorage.mensagemImgName = file?.name
-        gerados
+        let envio = {
+       "img":  localStorage.mensagemImage_base64img ,
+       "imgname": localStorage.mensagemImgName,
+       "texto":localStorage.mensagemText ,
+       "numero":gerados,
+       "delay":localStorage.mensagemDelay,
+       "sessionName":localStorage.sessionName
+        }
         
     }
