@@ -50,3 +50,6 @@ section{
 .opacity{
     opacity: 0.8;
 }
+.card.row.col-md-8.card-body.form-check:has(:checked){
+    background-color: black;
+}

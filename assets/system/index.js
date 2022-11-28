@@ -13,7 +13,6 @@ let gerados = []
     if(document.querySelector("#closemodal")){
         document.querySelector("#closemodal").click()
     }
-    
     })
     sock.on("disconnect",async dados=>{
         console.log(sock.id)
@@ -54,6 +53,8 @@ let gerados = []
         sock.emit("startConexao",d,(ret)=>{
             document.querySelector("#loading").hidden = false
         }) 
+        localStorage.sessionName = d.sessionName
+
     }  
     async function validarNumero(numero){
         let WhatsappID = numero
@@ -118,12 +119,18 @@ let gerados = []
         })
     }
     sock.on("Qrcode", async dados=>{
+    var myOffcanvas =  document.querySelector("#offcanvasExample")
+    var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
     console.log(dados)
-    document.querySelector(".offcanvas-body").innerHTML = `
-    <h3>Leia o qrcode</h3>
-                <img src="" id="qrcode" width="350px" alt="">
-    `
-    document.querySelector('#qrcode').src ='data:image/png;base64,'+dados.qrcode
+    if(dados.user == localStorage.sessionName){
+        document.querySelector(".offcanvas-body").innerHTML = `
+        <h3>Leia o qrcode</h3>
+                    <img src="" id="qrcode" width="350px" alt="">
+        `
+        document.querySelector('#qrcode').src ='data:image/png;base64,'+dados.qrcode
+        bsOffcanvas.show()
+    }
+    return
     })
     sock.on("Retorno_userConect",async dados=>{
         if(document.querySelector("#MensagemConexao")){
@@ -137,11 +144,19 @@ let gerados = []
             <span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
                             <span class="visually-hidden">Conectado</span>
                           </span>`
+            setTimeout(() => {
+                var myOffcanvas =  document.querySelector("#offcanvasExample")
+                var bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+                bsOffcanvas.hide()
+            }, 5000);                          
         }
         
         console.log(dados)
+        if(dados.numero == undefined){
+            return
+        }
         let n =  dados.numero.split(':')
-        WhatsappID =  n[0]+'@c.us'
+        let WhatsappID =  n[0]+'@c.us'
         localStorage.WhatsappID = n[0]+'@c.us'
         let d = {
             sessionName:'willian.json', //identificado da sessão
@@ -245,12 +260,13 @@ let gerados = []
             soketID:sock.id,
             WhatsappID
         }
-        await sock.emit("onWhatsApp",d,
+        await sock.emit("checkWhatsapp",d,
                async (validar)=>{
+                
                 if( document.querySelector('#validando')){
                 document.querySelector('#validando').innerHTML = validar
                 }
-                  console.log(validar)
+                
                   if(validar[0]?.exists == undefined){
                     return 0
                    }else{
@@ -264,17 +280,20 @@ let gerados = []
                       console.log(d)
                       sock.emit("profilePictureUrl",d,async(ret)=>{
                           console.log(ret)
-                          if(ret != []){
+                          if(ret.data != 401){
                             gerados.push(WhatsappID)
                             confirmados++
                             document.querySelector("#confirmados").innerHTML = confirmados
                             falhawhatsapp = NumerosGerados - confirmados
                             document.querySelector("#falha").innerHTML = falhawhatsapp
                           }else{
-                           console.log('err')
+                           return
                           }
                           
                           
+                          if(ret == "[object Object]"){
+                            ret = "https://th.bing.com/th/id/OIP.Ff4OsUAvE1lbsfibnk8AQAAAAA?pid=ImgDet&rs=1"
+                          }
                           
                           listasnumeroGerado.innerHTML += `
 
@@ -300,6 +319,7 @@ let gerados = []
                       })
                    }
           })
+        return
     }
     async function enviar(){
         let base64img = await GetBase64IMG()
@@ -343,11 +363,18 @@ let gerados = []
         document.querySelector("#loading").hidden = false
         alert('Será enviado para o número: '+localStorage.WhatsappID)
         const file = document.getElementById('FileImagem').files[0];
+        let mensagem = document.querySelector("textarea").value
         let base64img = ''
         if(file?.name != undefined){
             base64img = await GetBase64IMG()
+
         }
-        let mensagem = document.querySelector("textarea").value
+
+        localStorage.mensagemImage_base64img =  base64img
+        localStorage.mensagemText = mensagem
+        localStorage.mensagemImgName = file?.name
+
+        
         console.table([base64img,mensagem])
         let WhatsappID = localStorage.WhatsappID
         let imgName = file?.name
@@ -391,5 +418,12 @@ let gerados = []
             }
         }
        
+        
+    }
+    async function salvarCampanha() {
+        localStorage.mensagemImage_base64img =  base64img
+        localStorage.mensagemText = mensagem
+        localStorage.mensagemImgName = file?.name
+        gerados
         
     }
