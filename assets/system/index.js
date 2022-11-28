@@ -231,6 +231,8 @@ let gerados = []
         let mensagem = document.querySelector("textarea").value
         document.querySelector("#imgconvertida").src =base64img 
         document.querySelector("#TextopreVisulizado").innerHTML = mensagem     
+        document.querySelector("#previadata").innerHTML = 'Data e hora início de envio:'+ document.querySelector("#datahorainicio").value
+        document.querySelector("#previa_delay").innerHTML = 'Delay:'+ document.querySelector("#delay").validar
     }
     let NumerosGerados = 0
     let confirmados = 0
@@ -364,6 +366,7 @@ let gerados = []
         alert('Será enviado para o número: '+localStorage.WhatsappID)
         const file = document.getElementById('FileImagem').files[0];
         let mensagem = document.querySelector("textarea").value
+        
         let base64img = ''
         if(file?.name != undefined){
             base64img = await GetBase64IMG()

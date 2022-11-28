@@ -20,8 +20,15 @@
  
                 <hr>
                 <div class="mb-3">
+                  <label for="datahorainicio" class="form-label">Data e hora para iníciar o envio! </label>
+                  <input type="datetime-local" onchange="previsulização()" class="form-control" id="datahorainicio" aria-describedby="help">
+                  <div id="help" class="form-text">Data e Hora que o sistema irá iniciar o disparo das mensagens aos whatsapps validados</div>
+                </div>
+
+                <hr>
+                <div class="mb-3">
                   <label for="delay" class="form-label">Delay  </label>
-                  <input type="number" value="20" max="240" min="5" class="form-control" id="delay" aria-describedby="help">
+                  <input type="number" onchange="previsulização()" id="delaymessage" value="20" max="240" min="5" class="form-control" id="delay" aria-describedby="help">
                   <div id="help" class="form-text">Intervalo de segundos envio entre mensagens, onde minimo e 5 segundos e maximo 240 segundos.</div>
                 </div>
  
@@ -46,6 +53,10 @@
           <div class="card" style="max-width:350px;" >
               <img id="imgconvertida" hidden  src="https://th.bing.com/th/id/OIP.uE-t0OHQf3dIo6jA6X7MnwHaEo?pid=ImgDet&rs=1" class="card-img-top" alt="foto" style="max-height:350px;" >
               <div class="card-body">
+
+                <div id="previadata" ></div>
+                <div id="previa_delay" > </div>
+                <hr>
                 <p class="card-text" id="TextopreVisulizado"></p>
               </div>
             </div>
