@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node backend.js"
+    "start": "nodemon backend.js"
   },
   "keywords": [],
   "author": "ajdev",
@@ -14,5 +14,8 @@
   "dependencies": {
     "mysql": "^2.18.1",
     "socket.io-client": "^4.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

@@ -1,4 +1,7 @@
-let gerados = []
+    let gerados = []
+    let NumerosGerados = 0
+    let confirmados = 0
+    let falhawhatsapp = 0
 
     const sock = io("http://192.168.2.103:7777", {
     reconnectionDelayMax: 10000
@@ -9,10 +12,10 @@ let gerados = []
     }
     sock.on("connect",async dados=>{
     console.log(sock.id)
-    
-    if(document.querySelector("#closemodal")){
-        document.querySelector("#closemodal").click()
-    }
+        
+        if(document.querySelector("#closemodal")){
+            document.querySelector("#closemodal").click()
+        }
     })
     sock.on("disconnect",async dados=>{
         console.log(sock.id)
@@ -82,7 +85,7 @@ let gerados = []
             soketID:sock.id,
             WhatsappID:numero
         }
-        sock.emit("onWhatsApp",d,(ret)=>{
+        sock.emit("checkWhatsapp",d,(ret)=>{
             document.querySelector("#RespostaPesquisa").innerHTML = ``
             console.log(ret)
             document.querySelector('#dados').innerHTML = ret[0].jid
@@ -220,7 +223,6 @@ let gerados = []
                 tel+= await randomnumber(0,9)
             }
         }
-        
         tel = pais+''+''+ddd+''+tel
         console.log(tel)
         return tel
@@ -229,26 +231,25 @@ let gerados = []
         let base64img = await GetBase64IMG()
         document.querySelector('#imgconvertida').innerHTML = base64img
         let mensagem = document.querySelector("textarea").value
-        document.querySelector("#imgconvertida").src =base64img 
+        document.querySelector("#imgconvertida").src = base64img 
         document.querySelector("#TextopreVisulizado").innerHTML = mensagem     
         document.querySelector("#previadata").innerHTML = 'Data e hora início de envio:'+ document.querySelector("#datahorainicio").value
         document.querySelector("#previa_delay").innerHTML = 'Delay:'+ document.querySelector("#delay").validar
     }
-    let NumerosGerados = 0
-    let confirmados = 0
-    let falhawhatsapp = 0
+    
     async function Gerarwhatsapp() {
       let quantidade  = document.querySelector("#quantidade").value  
       let tentativas = 0
       let listasnumeroGerado = document.querySelector("#listasnumeroGerado")
 
-      for (let index = 0; gerados.length-1 < quantidade; index++) {
+      for (let index = 0; gerados.length < quantidade +1;  index++) {
         NumerosGerados ++
         document.querySelector("#gerados").innerHTML = NumerosGerados 
         if (tentativas >= 1000) {
             return
         }
-         let numero  = await Gerarnumero()
+         let numero  =  await Gerarnumero()
+         
          await aplicandoNumero(numero)
          await timer(1)
       }
@@ -281,7 +282,7 @@ let gerados = []
                       }
                       console.log(d)
                       sock.emit("profilePictureUrl",d,async(ret)=>{
-                          console.log(ret)
+                          console.log(ret.data)
                           if(ret.data != 401){
                             gerados.push(WhatsappID)
                             confirmados++
@@ -289,7 +290,7 @@ let gerados = []
                             falhawhatsapp = NumerosGerados - confirmados
                             document.querySelector("#falha").innerHTML = falhawhatsapp
                           }else{
-                           return
+                           return ''
                           }
                           
                           
@@ -301,10 +302,10 @@ let gerados = []
 
                           <div id="${numero}" class="card mb-3 col-sm-12 col-md-4">
                           <div class="row g-0">
-                              <div class="col-md-4">
+                              <div class="col-4">
                               <img src="${ret}" class="img-fluid rounded-start" alt="${numero}">
                               </div>
-                              <div class="col-md-8">
+                              <div class="col-8">
                               <div class="card-body">
                                   <h5 class="card-title">Válido</h5>
                                   <p class="card-text">${numero}</p>
@@ -318,10 +319,12 @@ let gerados = []
                           </div>
               
                           `
+                          return
                       })
                    }
           })
-        return
+        return  
+        
     }
     async function enviar(){
         let base64img = await GetBase64IMG()
@@ -347,7 +350,12 @@ let gerados = []
         }
     }
     async function CancelarBuscar(){
-        window.location.href=window.location.href
+        if(document.getElementById('loading').hidden == false){
+            document.getElementById('loading').hidden = true
+        }else{
+            document.getElementById('loading').hidden = false
+        }
+        
     }
     async function enviarComFoto() {
         if(document.querySelector('#enviarConFoto').hidden==false){
@@ -361,7 +369,7 @@ let gerados = []
         }
 
     }
-    async function  EnvioDeTezte() {
+    async function EnvioDeTezte() {
         document.querySelector("#loading").hidden = false
         alert('Será enviado para o número: '+localStorage.WhatsappID)
         const file = document.getElementById('FileImagem').files[0];
