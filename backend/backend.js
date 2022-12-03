@@ -1,6 +1,7 @@
 import {sock} from './functions/socket/index.js';
 import {connection} from './functions/mysql/index.js';
 import express from 'express'
+import cors from 'cors'
 
 sock.on("connect",async dados=>{
   console.log(sock.id)
@@ -25,6 +26,13 @@ export const  Get = (query)=>{
 };
 const app = express()
 app.use(express.json());
+
+const corsOptions = {
+	origin: 'http://*/',
+	optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
 const port = 3535
 app.use('/', express.static('public'))
 
