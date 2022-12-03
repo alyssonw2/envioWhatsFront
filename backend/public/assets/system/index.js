@@ -72,8 +72,6 @@
                  document.querySelector("#loading").hidden = true
             })
         
-        
-        
     }
     async function onWhatsApp(){
       let WhatsappID = document.querySelector("#numero").value
@@ -242,7 +240,7 @@
       let tentativas = 0
       let listasnumeroGerado = document.querySelector("#listasnumeroGerado")
 
-      for (let index = 0; gerados.length < quantidade +1;  index++) {
+      for (let index = 0; gerados.length -1 < quantidade ;  index++) {
         NumerosGerados ++
         document.querySelector("#gerados").innerHTML = NumerosGerados 
         if (tentativas >= 1000) {
@@ -292,7 +290,6 @@
                           }else{
                            return ''
                           }
-                          
                           
                           if(ret == "[object Object]"){
                             ret = "https://th.bing.com/th/id/OIP.Ff4OsUAvE1lbsfibnk8AQAAAAA?pid=ImgDet&rs=1"
@@ -384,7 +381,6 @@
         localStorage.mensagemText = mensagem
         localStorage.mensagemImgName = file?.name
 
-        
         console.table([base64img,mensagem])
         let WhatsappID = localStorage.WhatsappID
         let imgName = file?.name
@@ -428,7 +424,6 @@
             }
         }
        
-        
     }
     async function salvarCampanha() {
         let envio = {
@@ -439,5 +434,7 @@
        "delay":localStorage.mensagemDelay,
        "sessionName":localStorage.sessionName
         }
+        console.log(envio)
+        axios.post('/SalvarMessage',envio)
         
     }

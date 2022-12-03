@@ -1,14 +1,13 @@
 import {sock} from './functions/socket/index.js';
 import {connection} from './functions/mysql/index.js';
+import express from 'express'
 
 sock.on("connect",async dados=>{
   console.log(sock.id)
 });
-
 sock.on("disconnect",async dados=>{
     console.log(sock.id)  
 });
-
 connection.getConnection(function(err) {
   if (err) {
     console.error('error connecting: ' + err.stack);
@@ -24,3 +23,16 @@ export const  Get = (query)=>{
   return  results
   });
 };
+const app = express()
+app.use(express.json());
+const port = 3535
+app.use('/', express.static('public'))
+
+app.post('/SalvarMessage', (req, res) => {
+  console.log(req.body)
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
