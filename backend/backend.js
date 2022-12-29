@@ -216,7 +216,7 @@ async function startConexao(sessionName,browserName,soketID) {
   }) 
 }  
 
-const sockWhatsappBot = io("http://ajdev.ddns.net:7777", {
+const sockWhatsappBot = io("http://191.101.71.117:7777", {
   reconnectionDelayMax: 10000
   });
   const timer = (seconds) =>  {

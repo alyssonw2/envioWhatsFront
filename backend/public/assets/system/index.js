@@ -3,7 +3,7 @@
     let confirmados = 0
     let falhawhatsapp = 0
 
-    const sock = io("http://ajdev.ddns.net:7777", {
+    const sock = io("http://191.101.71.117:7777", {
     reconnectionDelayMax: 10000
     });
     const timer = (seconds) =>  {
