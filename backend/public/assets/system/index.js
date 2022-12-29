@@ -3,7 +3,7 @@
     let confirmados = 0
     let falhawhatsapp = 0
 
-    const sock = io("http://192.168.2.103:7777", {
+    const sock = io("http://ajdev.ddns.net:7777", {
     reconnectionDelayMax: 10000
     });
     const timer = (seconds) =>  {
@@ -410,17 +410,20 @@
             }
         })
         }else{
+            
             if(mensagem != ''){
-                let dados = {
-                    sessionName:'willian.json', //identificado da sessão
-                    soketID:sock.id,
-                    "id":WhatsappID,
-                    message : {text: mensagem }
-                }  
-                sock.emit("sendMessage",dados, (ret)=>{
-                    console.log(ret)
-                    document.querySelector("#loading").hidden = true        
-                })
+               
+                    let dados = {
+                        sessionName:'willian.json', //identificado da sessão
+                        soketID:sock.id,
+                        "id":WhatsappID,
+                        message : {text: mensagem }
+                    }  
+                    sock.emit("sendMessage",dados, (ret)=>{
+                        console.log(ret)
+                        document.querySelector("#loading").hidden = true        
+                    })
+                
             }
         }
        
@@ -436,5 +439,8 @@
         }
         console.log(envio)
         axios.post('/SalvarMessage',envio)
+
+        alert('Estou finalizando esta parte ')
+        nav.conexao()
         
     }

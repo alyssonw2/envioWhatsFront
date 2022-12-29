@@ -17,8 +17,8 @@ connection.getConnection(function(err) {
   console.log('connected as id ' + connection.threadId);
 });
 
-export const  Get = (query)=>{
-  connection.query(query, async function (error, results, fields) {
+export const  Get = async (query)=>{
+   connection.query(query, async function (error, results, fields) {
   if (error) throw error;
   console.log(results)
   return  results
@@ -36,9 +36,14 @@ app.use(cors(corsOptions));
 const port = 3535
 app.use('/', express.static('public'))
 
-app.post('/SalvarMessage', (req, res) => {
+app.post('/SalvarMessage', async (req, res) => {
   console.log(req.body)
-  res.send('Hello World!')
+  let q = "INSERT INTO `mensagens` (`mensagem_id`, `usuario_id`, `dataRegistro`, `recebedores`, `imagem`, `mensagem`, `status`, `data_disparo_previsto`, `dataTermino_disparo`, `delay`, `sessionname`) VALUES (NULL, '1', CURRENT_TIMESTAMP, '[]', 'data', 'mensagem', 'status', '2022-12-31 00:00:00', '', '20', 'willian.json')"
+  await Get(q).then(
+    ()=>{res.send({"Response":'mensagem enviada '})}
+  ).catch(
+    (erro)=>{res.send({"Response":erro})}
+  )
 })
 
 app.listen(port, () => {

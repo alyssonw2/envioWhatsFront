@@ -65,4 +65,4 @@ const nav = {
 
 }
 
-nav.conexao()
+nav.logout()
