@@ -1,4 +1,5 @@
 import {sock} from './functions/socket/index.js';
+import io from 'socket.io-client'
 import {connection} from './functions/mysql/index.js';
 import express from 'express'
 import cors from 'cors'
@@ -6,15 +7,17 @@ import cors from 'cors'
 sock.on("connect",async dados=>{
   console.log(sock.id)
 });
+
+const sockWhatsappBot = io("http://192.168.2.103:7777", {
+  reconnectionDelayMax: 10000
+});
+sockWhatsappBot.on("connect",async dados=>{
+  console.log(dados)
+  await envioMensagemAgendada()
+})
+
 sock.on("disconnect",async dados=>{
     console.log(sock.id)  
-});
-connection.getConnection(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }
-  console.log('connected as id ' + connection.threadId);
 });
 
 export const  Get = async (query)=>{
@@ -117,7 +120,7 @@ app.post('/RegistroStatusEnvio', async (req, res) => {
 })
 
 app.listen(port, () => {
-  envioMensagemAgendada()
+  
   console.log(`Example app listening on port ${port}`)
 })
 function createAlphaString(length) {
@@ -141,7 +144,6 @@ async function createDelay(timeDelay){
 
 async function envioMensagemAgendada() {
   let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando'  ORDER BY RAND() LIMIT 1"
-
   connection.query(query, async function (error, results, fields) {
     if (error) throw error;
     if(results.length == 0){
@@ -163,68 +165,84 @@ async function envioMensagemAgendada() {
     console.log(WhatsappID)
     console.log(sessionName)
     console.log(WhatsappID.indexOf(','))
-    let conectado = await startConexao(sessionName,'teste')
-    console.log(conectado)
-    if(conectado == 'INICIADA'){
-      await createDelay(10)
-    }
-    if(conectado == 'QRCODE'){
-      let query = "UPDATE `mensagens` SET `status` = 'Whatsapp não conectado' WHERE `mensagens`.`mensagem_id` = '"+results[0].mensagem_id+"' "
-        connection.query(query, async function (error, results, fields) {
-          console.log(results)
-      })
-      setTimeout(() => {
-        envioMensagemAgendada()
-      }, 2000);
-      return
-    }
-    if(WhatsappID.indexOf(',') != -1){
-      WhatsappID = WhatsappID.split(',')
-      for(let numero of WhatsappID){
-        console.log(numero)
-        await Enviando(mensagem,base64img,numero,imgName,sessionName,messageID)
-        await createDelay(delay)
+   await  startConexao(sessionName,'teste',sockWhatsappBot.id)
+    .then(
+     async (conectado)=>{
+        console.log(conectado)
+
+        if(conectado == 'INICIADA'){
+          await createDelay(10)
+        }
+        if(conectado == 'QRCODE'){
+          let query = "UPDATE `mensagens` SET `status` = 'Whatsapp não conectado' WHERE `mensagens`.`mensagem_id` = '"+results[0].mensagem_id+"' "
+            connection.query(query, async function (error, results, fields) {
+              console.log(results)
+          })
+          setTimeout(() => {
+            envioMensagemAgendada()
+          }, 2000);
+          return
+        }
+        if(conectado?.id != undefined){
+          console.log('CONECTADO')
+          console.log(conectado.id)
+          
+        }
+        if(WhatsappID.indexOf(',') != -1){
+          WhatsappID = WhatsappID.split(',')
+          for(let numero of WhatsappID){
+            console.log(numero)
+            await Enviando(mensagem,base64img,numero,imgName,sessionName,messageID)
+            await createDelay(delay)
+          }
+          
+        }else{
+          await createDelay(delay)
+          await Enviando(mensagem,base64img,WhatsappID,imgName,sessionName,messageID)
+          
+        }
+          let query = "UPDATE `mensagens` SET `status` = 'Finalizada' WHERE `mensagens`.`mensagem_id` = '"+results[0].mensagem_id+"' "
+            connection.query(query, async function (error, results, fields) {
+              console.log(results)
+          })
+          setTimeout(() => {
+            envioMensagemAgendada()
+          }, 2000);
       }
+    ).catch(
+      (erro)=>{console.log(erro)}
       
-    }else{
-      await createDelay(delay)
-      await Enviando(mensagem,base64img,WhatsappID,imgName,sessionName,messageID)
-      
-    }
-      let query = "UPDATE `mensagens` SET `status` = 'Finalizada' WHERE `mensagens`.`mensagem_id` = '"+results[0].mensagem_id+"' "
-        connection.query(query, async function (error, results, fields) {
-          console.log(results)
-      })
-      setTimeout(() => {
-        envioMensagemAgendada()
-      }, 2000);
-    
+    )
+   
   });
 }
-import io from 'socket.io-client'
 
 async function startConexao(sessionName,browserName,soketID) {
+  
   let d = {
-  sessionName, //identificado da sessão
-  browserName, // nome que será exibido no dispositivo
-  soketID: sockWhatsappBot.id,
-  webhook:'' // caminho para notificações
-  }
-  sockWhatsappBot.emit("startConexao",d,(ret)=>{
-      console.log(ret)
-      return ret
+    sessionName,
+    browserName:'Windows', // nome que será exibido no dispositivo
+    soketID:soketID,
+    webhook:'' // caminho para notificações
+    }
+
+  //console.log(d)
+   sockWhatsappBot.emit("startConexao",d,(ret)=>{
+    console.log('------------')
+    console.log(ret)
+     return ret
+      console.log('------------')
   }) 
+
 }  
 
-const sockWhatsappBot = io("http://191.101.71.117:7777", {
-  reconnectionDelayMax: 10000
-  });
   const timer = (seconds) =>  {
   let time = seconds * 500
   return new Promise(res => setTimeout(res, time))
   }
   sockWhatsappBot.on("connect",async dados=>{
   console.log(sockWhatsappBot.id)
+  
   })
   sockWhatsappBot.on("disconnect",async dados=>{
       console.log(sockWhatsappBot.id)

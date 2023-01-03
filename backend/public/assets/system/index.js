@@ -54,6 +54,7 @@
         webhook:'' // caminho para notificações
         }
         sock.emit("startConexao",d,(ret)=>{
+            $('#loading > div > div > div.col-8 > div > button').click()
             $("#loading").hidden = false
         }) 
         localStorage.sessionName = d.sessionName
@@ -135,6 +136,8 @@
     return
     })
     sock.on("Retorno_userConect",async dados=>{
+        $('#loading > div > div > div.col-8 > div > button').click()
+
         if($("#MensagemConexao")){
             $("#MensagemConexao").innerHTML =` 
             Whatsapp ativo
