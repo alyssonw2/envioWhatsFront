@@ -8,8 +8,7 @@ const getHTML = async (url)=>{
 
 const nav = {
     async login(){
-        $("app").innerHTML = await getHTML('./assets/paginas/logout')
-        
+        $("app").innerHTML = await getHTML('./assets/paginas/logout')  
     },
     async logout(){
         $("app").innerHTML = await getHTML('./assets/paginas/logout')
@@ -18,13 +17,9 @@ const nav = {
         $("app").innerHTML = await getHTML('./assets/componentes/navbar')
         $("app").innerHTML += await getHTML('./assets/componentes/offcanvasModalLoading')
         $("app").innerHTML += await getHTML('./assets/paginas/conexao')
-        setTimeout(() => {
-            start()
-            if($("#closemodal")){
-                $("#closemodal").click()
-                
-            }
-           }, 1000);
+        
+        start()
+           
         setTimeout(() => {
             var data = JSON.stringify({
                 "sessionName": localStorage.sessionName
@@ -67,6 +62,7 @@ const nav = {
                     </tr>
                     `
                 }
+                CancelarBuscar()
               })
               .catch(function (error) {
                 console.log(error);
@@ -184,8 +180,16 @@ const nav = {
         $("app").innerHTML = await getHTML('./assets/componentes/navbar')
         $("app").innerHTML += await getHTML('./assets/componentes/offcanvasModalLoading')
         $("app").innerHTML += await getHTML('./assets/paginas/criarMensagem')
+         gerados = []
+         NumerosGerados = 0
+         confirmados = 1
+         falhawhatsapp = 0
     }
 
 }
 
-nav.logout()
+if(localStorage.sessionName != undefined){
+  nav.conexao()
+}else{
+  nav.logout()
+}

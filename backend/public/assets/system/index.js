@@ -1,10 +1,10 @@
     let gerados = []
     let NumerosGerados = 0
-    let confirmados = 0
+    let confirmados = 1
     let falhawhatsapp = 0
 
     const sock = io(":7777", {
-    reconnectionDelayMax: 10000
+        reconnectionDelayMax: 10000
     });
     const timer = (seconds) =>  {
     let time = seconds * 500
@@ -12,7 +12,7 @@
     }
     sock.on("connect",async dados=>{
     console.log(sock.id)
-        
+    
         if($("#closemodal")){
             $("#closemodal").click()
         }
@@ -54,11 +54,11 @@
         webhook:'' // caminho para notificações
         }
         sock.emit("startConexao",d,(ret)=>{
-            $('#loading > div > div > div.col-8 > div > button').click()
-            $("#loading").hidden = false
+            console.log(ret)
+            CancelarBuscar()
         }) 
         localStorage.sessionName = d.sessionName
-
+        CancelarBuscar()
     }  
     async function validarNumero(numero){
         let WhatsappID = numero
@@ -88,6 +88,7 @@
         sock.emit("checkWhatsapp",d,(ret)=>{
             $("#RespostaPesquisa").innerHTML = ``
             console.log(ret)
+            
             $('#dados').innerHTML = ret[0].jid
             let d = {
                 sessionName: localStorage.sessionName, //identificado da sessão
@@ -101,6 +102,9 @@
             })*/
             sock.emit("profilePictureUrl",d,(ret)=>{
                 console.log(ret)
+                if(ret == "[object Object]"){
+                    ret = "https://th.bing.com/th/id/OIP.Ff4OsUAvE1lbsfibnk8AQAAAAA?pid=ImgDet&rs=1"
+                  }
                 $("#RespostaPesquisa").innerHTML = `
                 <div class="card mb-3" style="max-width: 540px;">
             <div class="row g-0">
@@ -175,6 +179,9 @@
             if(ret != ''){
               gerados.push(WhatsappID)
             }
+            if(ret == "[object Object]"){
+                ret = "https://th.bing.com/th/id/OIP.Ff4OsUAvE1lbsfibnk8AQAAAAA?pid=ImgDet&rs=1"
+              }
             if( $(".offcanvas-body")){
                 $(".offcanvas-body").innerHTML = `
                 <div class="card mb-3" style="max-width: 540px;">
@@ -197,6 +204,7 @@
         return Math.floor(Math.random() * max + min)
     }
     async function Gerarnumero() {
+
         $("#loading").hidden = false
         let tel = ''
         let pais = $("#pais").value
@@ -240,14 +248,17 @@
     }
     
     async function Gerarwhatsapp() {
+        
       let quantidade  = $("#quantidade").value  
+      quantidade = parseInt(quantidade)
       let tentativas = 0
-      let listasnumeroGerado = $("#listasnumeroGerado")
 
+      let listasnumeroGerado = $("#listasnumeroGerado")
+     
       for (let index = 0; gerados.length -1 < quantidade ;  index++) {
         NumerosGerados ++
         $("#gerados").innerHTML = NumerosGerados 
-        if (tentativas >= 1000) {
+        if (tentativas >= 10000) {
             return
         }
          let numero  =  await Gerarnumero()
@@ -267,12 +278,10 @@
         }
         await sock.emit("checkWhatsapp",d,
                async (validar)=>{
-                
                 if( $('#validando')){
                 $('#validando').innerHTML = validar
                 }
-                
-                  if(validar[0]?.exists == undefined){
+                if(validar[0]?.exists == undefined){
                     return 0
                    }else{
                     
@@ -287,20 +296,19 @@
                           console.log(ret.data)
                           if(ret.data != 401){
                             gerados.push(WhatsappID)
-                            confirmados++
                             $("#confirmados").innerHTML = confirmados
                             falhawhatsapp = NumerosGerados - confirmados
                             $("#falha").innerHTML = falhawhatsapp
+
                           }else{
                            return ''
                           }
-                          
+                          confirmados++
                           if(ret == "[object Object]"){
                             ret = "https://th.bing.com/th/id/OIP.Ff4OsUAvE1lbsfibnk8AQAAAAA?pid=ImgDet&rs=1"
                           }
                           
                           listasnumeroGerado.innerHTML += `
-
                           <div id="${numero}" class="card mb-3 col-sm-12 col-md-4">
                           <div class="row g-0">
                               <div class="col-4">
@@ -351,11 +359,8 @@
         }
     }
     async function CancelarBuscar(){
-        if(document.getElementById('loading').hidden == false){
+        
             document.getElementById('loading').hidden = true
-        }else{
-            document.getElementById('loading').hidden = false
-        }
         
     }
     async function enviarComFoto() {
@@ -447,10 +452,9 @@
         }
         console.log(envio)
         axios.post('/SalvarMessage',envio)
-
-        alert('Estou finalizando esta parte ')
+        //alert('Estou finalizando esta parte ')
         await nav.conexao()
-        
+
     }
 
     function cancelarMessage(messagemID) {
@@ -499,6 +503,7 @@
                 localStorage.sessionName = response.data[0].whatsappusuario
                 localStorage.usuarioEmail = response.data[0].emailusuario
                 nav.conexao()
+                
             }else{
                 alert('usuário ou senha incorretos')
             }

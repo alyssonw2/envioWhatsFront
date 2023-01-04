@@ -62,11 +62,12 @@ app.post('/SalvarMessage', async (req, res) => {
 app.post('/GetMessage', async (req, res) => {
   console.log(req.body)
   const {sessionName} = req.body
-  let query= "SELECT * FROM `mensagens` WHERE sessionname = '"+sessionName+"' and status = 'aguardando'"
+  let query= "SELECT * FROM `mensagens` WHERE sessionname = '"+sessionName+"' and status = 'aguardando' "
+  console.log(query)
   connection.query(query, async function (error, results, fields) {
     if (error) throw error;
     res.send(results)
-    });
+  });
 })
 
 app.post('/CancelarMessage', async (req, res) => {
@@ -143,7 +144,8 @@ async function createDelay(timeDelay){
 }
 
 async function envioMensagemAgendada() {
-  let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando'  ORDER BY RAND() LIMIT 1"
+  let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando' and  data_disparo_previsto > CURDATE() ORDER BY RAND() LIMIT 1"
+  console.log(query)
   connection.query(query, async function (error, results, fields) {
     if (error) throw error;
     if(results.length == 0){
@@ -189,25 +191,28 @@ async function envioMensagemAgendada() {
           
         }
         if(WhatsappID.indexOf(',') != -1){
+          let envios = 0
           WhatsappID = WhatsappID.split(',')
           for(let numero of WhatsappID){
             console.log(numero)
             await Enviando(mensagem,base64img,numero,imgName,sessionName,messageID)
             await createDelay(delay)
+            console.log('enviado' + envios )
           }
+
+          }else{
           
-        }else{
-          await createDelay(delay)
           await Enviando(mensagem,base64img,WhatsappID,imgName,sessionName,messageID)
-          
+          await createDelay(delay)
         }
           let query = "UPDATE `mensagens` SET `status` = 'Finalizada' WHERE `mensagens`.`mensagem_id` = '"+results[0].mensagem_id+"' "
             connection.query(query, async function (error, results, fields) {
               console.log(results)
+              setTimeout(() => {
+                envioMensagemAgendada()
+              }, 2000);
           })
-          setTimeout(() => {
-            envioMensagemAgendada()
-          }, 2000);
+          
       }
     ).catch(
       (erro)=>{console.log(erro)}
@@ -271,7 +276,6 @@ console.log('iniciou o envio')
           console.log(error)
           console.log(results)
         })
-      
       if(mensagem != ''){
           let dados = {
               sessionName, //identificado da sessão
