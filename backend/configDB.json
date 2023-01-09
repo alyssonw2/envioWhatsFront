@@ -1,6 +1,6 @@
 {
-    "host"            : "localhost",
-    "user"            : "apisoketwhatsapp",
+    "host"            : "191.101.71.117",
+    "user"            : "root",
     "password"        : "Nei#8suptec",
     "database"        : "envioemmassa",
     "timezone"            : "CONF.mysql.timezone",

@@ -448,7 +448,8 @@
        "numero":gerados,
        "delay":localStorage.mensagemDelay,
        "datahorainicio":localStorage.datahorainicio,
-       "sessionName":localStorage.sessionName
+       "sessionName":localStorage.sessionName,
+       "usuario_id":localStorage.usuarioID
         }
         console.log(envio)
         axios.post('/SalvarMessage',envio)
@@ -514,5 +515,3 @@
           });
           
     }
-
-    
