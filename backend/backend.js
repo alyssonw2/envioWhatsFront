@@ -160,7 +160,7 @@ async function envioMensagemAgendada() {
     let base64img = mensagemParaEnviar[0].imagem
     let WhatsappID = mensagemParaEnviar[0].recebedores
     let imgName = createAlphaString(20)
-    let messageID = mensagemParaEnviar[0].messagem_id
+    let messageID = mensagemParaEnviar[0].mensagem_id
     let sessionName = mensagemParaEnviar[0].sessionname
     let delay = mensagemParaEnviar[0].delay
     let data_disparo_previsto = mensagemParaEnviar[0].data_disparo_previsto

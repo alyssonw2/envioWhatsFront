@@ -11,6 +11,7 @@ const nav = {
         $("app").innerHTML = await getHTML('./assets/paginas/logout')  
     },
     async logout(){
+      localStorage.clear()
         $("app").innerHTML = await getHTML('./assets/paginas/logout')
     },
     async conexao(){
@@ -63,6 +64,22 @@ const nav = {
                     `
                 }
                 CancelarBuscar()
+
+                const meuInput = document.getElementById('filtro');
+                  meuInput.oninput = function() {
+                    let linhas = document.querySelectorAll('tr')
+                    for(let linha of linhas){
+                      if(linha.textContent.indexOf('imagem') == -1){
+                        if(linha.textContent.indexOf(meuInput.value) == -1){
+                          linha.style.display='none'
+                        }else{
+                          linha.style.display='block'
+                        }
+                      }
+                    }
+                  }
+
+
               })
               .catch(function (error) {
                 console.log(error);

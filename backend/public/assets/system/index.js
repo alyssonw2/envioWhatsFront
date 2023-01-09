@@ -502,6 +502,7 @@
             if(response.length != 0){
                 localStorage.sessionName = response.data[0].whatsappusuario
                 localStorage.usuarioEmail = response.data[0].emailusuario
+                localStorage.usuarioID = response.data[0].idusaurio
                 nav.conexao()
                 
             }else{
@@ -513,3 +514,5 @@
           });
           
     }
+
+    
