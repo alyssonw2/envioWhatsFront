@@ -51,8 +51,9 @@ app.post('/login', async (req, res) => {
 
 app.post('/SalvarMessage', async (req, res) => {
   console.log(req.body)
-  
+
   let q = "INSERT INTO `mensagens` (`mensagem_id`, `usuario_id`, `dataRegistro`, `recebedores`, `imagem`, `mensagem`, `status`, `data_disparo_previsto`, `dataTermino_disparo`, `delay`, `sessionname`) VALUES (NULL, '"+req.body.usuario_id+"', CURRENT_TIMESTAMP, '"+req.body.numero+"', '"+req.body.img+"', '"+req.body.texto+"', 'aguardando', '"+req.body.datahorainicio+"', '', '"+req.body.delay+"', '"+req.body.sessionName+"')"
+  console.log(q)
   await Get(q).then(
     ()=>{res.send({"Response":'mensagem enviada '})}
   ).catch(
