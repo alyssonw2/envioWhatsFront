@@ -297,7 +297,7 @@ function novousuaario(){
 
 function removerusuario(id){
   var data = JSON.stringify({
-    "idusaurio" : id    
+    "idusuario" : id    
   });
 
         var config = {
