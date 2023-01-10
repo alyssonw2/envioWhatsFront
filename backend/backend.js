@@ -48,6 +48,44 @@ app.post('/login', async (req, res) => {
     res.send(results)
     });
 })
+//ok 
+app.post('/getusuarios', async (req, res) => {
+ let q = "SELECT * FROM `usuario`"
+ connection.query(q, async function (error, results, fields) {
+   if (error) throw error;
+   res.send(results)
+   });
+})
+//falta ennciar o post
+app.post('/novousuaario', async (req, res) => {
+  let resh = generateRandomString(8)
+  let nome = req.body.nome
+  let email = req.body.email
+  let senha = req.body.senha
+  let q = "INSERT INTO `usuario` (`idusaurio`, `nomeusuario`, `emailusuario`, `senhausuario`, `dataCadastrousuario`, `statususuario`, `whatsappusuario`) VALUES (NULL, '"+nome+"', '"+email+"', '"+senha+"', CURRENT_TIMESTAMP, 'Ativo', '"+nome+resh+".connect');"
+  connection.query(q, async function (error, results, fields) {
+    if (error) throw error;
+    res.send(results)
+    });
+ })
+//falta enviar o post
+ app.post('/removerusuario', async (req, res) => {
+  let q = "delete  FROM `usuario` where idusaurio = '"+req.body.idusuario+"'"
+  connection.query(q, async function (error, results, fields) {
+    if (error) throw error;
+    res.send(results)
+    });
+ })
+
+ function generateRandomString(length) {
+  let result = "";
+  const characters = "abcdefghijklmnopqrstuvwxyz";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 app.post('/SalvarMessage', async (req, res) => {
   console.log(req.body)
@@ -146,7 +184,7 @@ async function createDelay(timeDelay){
 }
 
 async function envioMensagemAgendada() {
-  let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando' and  data_disparo_previsto > CURDATE() ORDER BY RAND() LIMIT 1"
+  let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando' and  data_disparo_previsto < CURRENT_TIME() ORDER BY RAND() LIMIT 1"
   console.log(query)
   connection.query(query, async function (error, results, fields) {
     if (error) throw error;
@@ -192,6 +230,7 @@ async function envioMensagemAgendada() {
           console.log(conectado.id)
           
         }
+        
         if(WhatsappID.indexOf(',') != -1){
           let envios = 0
           WhatsappID = WhatsappID.split(',')
@@ -204,15 +243,18 @@ async function envioMensagemAgendada() {
 
           }else{
           
-          await Enviando(mensagem,base64img,WhatsappID,imgName,sessionName,messageID)
-          await createDelay(delay)
+             await Enviando(mensagem,base64img,WhatsappID,imgName,sessionName,messageID)
+             await createDelay(delay)
         }
           let query = "UPDATE `mensagens` SET `status` = 'Finalizada' WHERE `mensagens`.`mensagem_id` = '"+results[0].mensagem_id+"' "
+          console.log(query)
             connection.query(query, async function (error, results, fields) {
-              console.log(results)
-              setTimeout(() => {
-                envioMensagemAgendada()
-              }, 2000);
+              if(results){
+                setTimeout(() => {
+                  envioMensagemAgendada()
+                }, 2000);
+              }
+              
           })
           
       }
@@ -256,7 +298,7 @@ async function startConexao(sessionName,browserName,soketID) {
   })
 
 async function Enviando(mensagem,base64img,WhatsappID,imgName,sessionName,messageID) {
-console.log('iniciou o envio')
+console.log('Enviando para '+WhatsappID)
   let dados = {
       sessionName,
       soketID:sock.id,
@@ -270,7 +312,7 @@ console.log('iniciou o envio')
 
   if(base64img != ''){
   sockWhatsappBot.emit("sendMessage",dados, (ret)=>{
-    console.log('retorno----------------')
+//    console.log('retorno----------------')
     console.log(ret)
       
         let queryConfirmarEnvio = "INSERT INTO `mensagemenviada` (`id_Mensagem`, `sessionName`, `messagemID`, `dataEnvio`, `recebedor`, `status`) VALUES (NULL, '"+sessionName+"', '"+messageID+"', CURRENT_TIMESTAMP, '"+WhatsappID+"', '200')"
@@ -278,7 +320,9 @@ console.log('iniciou o envio')
         connection.query(queryConfirmarEnvio, async function (error, results, fields) {
           console.log(error)
           console.log(results)
+          
         })
+
       if(mensagem != ''){
           let dados = {
               sessionName, //identificado da sessão

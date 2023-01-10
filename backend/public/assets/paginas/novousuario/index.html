@@ -1,0 +1,54 @@
+<div class="container">
+    <div style="display: flex; justify-content: flex-end; padding-top: 25px;">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#novousuario" aria-controls="offcanvasExample">
+            Novo usuário
+          </button>
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">nome</th>
+            <th scope="col">email</th>
+            <th scope="col">dataCadatro</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          
+        </tbody>
+      </table>
+</div>
+
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="novousuario" aria-labelledby="novousuario">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="novousuarioLabel">Cadastrar novo usuário</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+        <form>
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome do usuário</label>
+                <input type="email" class="form-control" id="nome" aria-describedby="nome">
+                <div id="nome" class="form-text">Nome do usuário</div>
+              </div>
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">E-mail acesso</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              <div id="emailHelp" class="form-text">E-mail de acesso do usuário.</div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Senha de acesso</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" aria-describedby="senhaHelp">
+              <div id="senhaHelp" class="form-text">Senha de acesso para o usuário</div>
+            </div>
+            <button data-bs-dismiss="offcanvas" type="button" onclick="novousuaario()" class="btn btn-primary">Registrar</button>
+          </form>  
+      </div>
+      
+    </div>
+  </div>
+

@@ -18,7 +18,13 @@ const nav = {
         $("app").innerHTML = await getHTML('./assets/componentes/navbar')
         $("app").innerHTML += await getHTML('./assets/componentes/offcanvasModalLoading')
         $("app").innerHTML += await getHTML('./assets/paginas/conexao')
-        
+        if(localStorage.usuarioID == '1' ){
+          document.querySelector('#navbarScroll > ul').innerHTML += `
+          <li class="nav-item text-light">
+                    <a class="nav-link text-light" href="#" onclick="nav.novousuario()"> Admini - Usuários </a>
+                </li>
+          `
+        }
         start()
            
         setTimeout(() => {
@@ -78,7 +84,6 @@ const nav = {
                       }
                     }
                   }
-
 
               })
               .catch(function (error) {
@@ -193,6 +198,47 @@ const nav = {
         $("app").innerHTML += await getHTML('./assets/componentes/offcanvasModalLoading')
         $("app").innerHTML += await getHTML('./assets/paginas/validarWhatsapp')
     },
+    async novousuario(){
+      $("app").innerHTML = await getHTML('./assets/componentes/navbar')
+      $("app").innerHTML += await getHTML('./assets/componentes/offcanvasModalLoading')
+      $("app").innerHTML += await getHTML('./assets/paginas/novousuario')
+
+      setTimeout(() => {
+        //Carregando lista de usuarios 
+        var data = '';
+        var config = {
+          method: 'post',
+          url: './getusuarios',
+          headers: { },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          let table = document.querySelectorAll('tbody')[0]
+          for(let usuario of response.data){
+            const date = new Date(usuario.dataCadastrousuario);
+            
+            //renderizazndo usuarios
+            table.innerHTML += `
+            <tr>
+            <th>${usuario.nomeusuario}</th>
+            <td>${usuario.emailusuario}</td>
+            <td>${formatDate(date)}</td>
+            <td>
+                <button onclick="removerusuario('${usuario.idusaurio}')" type="button" class="btn btn-light">remover</button>
+            </td>
+          </tr>
+            `
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }, 1000);
+
+    },
+
     async criarMensagem(){
         $("app").innerHTML = await getHTML('./assets/componentes/navbar')
         $("app").innerHTML += await getHTML('./assets/componentes/offcanvasModalLoading')
@@ -209,4 +255,64 @@ if(localStorage.sessionName != undefined){
   nav.conexao()
 }else{
   nav.logout()
+}
+
+function formatDate(date) {
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  };
+
+  return new Intl.DateTimeFormat("pt-BR", options).format(date);
+}
+
+function novousuaario(){
+  var data = JSON.stringify({
+    "nome" : document.querySelectorAll('input')[0].value,
+    "emaail": document.querySelectorAll('input')[1].value ,
+    "senha": document.querySelectorAll('input')[2].value,
+  });
+
+        var config = {
+          method: 'post',
+          url: './novousuaario',
+          headers: {'Content-Type': 'application/json'},
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          nav.novousuario()
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+}
+
+function removerusuario(id){
+  var data = JSON.stringify({
+    "idusaurio" : id    
+  });
+
+        var config = {
+          method: 'post',
+          url: './removerusuario',
+          headers: {'Content-Type': 'application/json'},
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          nav.novousuario()
+          
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
 }
