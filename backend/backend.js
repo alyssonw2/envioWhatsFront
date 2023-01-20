@@ -184,7 +184,8 @@ async function createDelay(timeDelay){
 }
 
 async function envioMensagemAgendada() {
-  let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando' and  data_disparo_previsto < CURRENT_TIME() ORDER BY RAND() LIMIT 1"
+  //query que remove 6 horas da data atual
+  let query = "SELECT * FROM `mensagens` WHERE status = 'aguardando' and  data_disparo_previsto <= (SELECT DATE_SUB(NOW(), INTERVAL 6 HOUR) ) ORDER BY RAND() LIMIT 1;"
   console.log(query)
   connection.query(query, async function (error, results, fields) {
     if (error) throw error;
